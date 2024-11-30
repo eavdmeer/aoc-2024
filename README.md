@@ -1,4 +1,4 @@
-# Advent of Code 2022
+# Advent of Code 2024
 This small repo contains my NodeJS solutions to the Advent of Code challenge of 2024.
 
 # Personal leaderboard
