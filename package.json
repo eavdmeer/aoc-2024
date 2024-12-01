@@ -20,8 +20,11 @@
   },
   "homepage": "https://github.com/eavdmeer/aoc-2024#readme",
   "devDependencies": {
-    "eslint": "^8.57.1",
+    "eslint": "^9.16.0"
+    "@eslint/js": "^9.16.0",
     "eslint-plugin-jest": "^28.9.0",
     "jest": "^29.7.0"
+  },
+  "dependencies": {
   }
 }
