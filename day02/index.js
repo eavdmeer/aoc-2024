@@ -17,12 +17,7 @@ function valid(levels)
   const d = levels.map((l, i, a) => l - a[i + 1]);
   d.pop();
 
-  const nul = d.filter(v => v === 0).length;
-  const pos = d.filter(v => v > 0).length;
-  const neg = d.filter(v => v < 0).length;
-  const big = d.filter(v => v > 3 || v < -3).length;
-
-  return nul === 0 && big === 0 && (pos === 0 || neg === 0);
+  return d.every(v => v > 0 && v <= 3) || d.every(v => v < 0 && v >= -3);
 }
 
 function solve1(data)
