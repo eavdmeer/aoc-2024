@@ -19,6 +19,10 @@ echo "Setting up for day $day..."
 
 mkdir -p "$target" || exit 1
 cd "$target" || exit 1
+{
+  date -u
+  date +%s
+} > times.txt
 
 sarg="s/dayxx/day$day/; s/day: -1/day: $day/"
 sed "$sarg" "$here/skel/index.js" > index.js
