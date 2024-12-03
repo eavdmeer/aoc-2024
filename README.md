@@ -7,6 +7,7 @@ My 'performance' for this year:
 <pre>
       --------Part 1---------   --------Part 2---------
 Day       Time    Rank  Score       Time    Rank  Score
+  3   14:01:51  81716      0   14:16:49  70496      0
   2   14:09:51  87993      0   14:38:46  65598      0
   1   08:10:30  45043      0   08:23:22  42383      0
 </pre>
