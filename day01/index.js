@@ -43,14 +43,12 @@ export default async function day01(target)
 
   const buffer = await fs.readFile(target);
 
-  /* eslint-disable no-shadow */
   const data = buffer
     .toString()
     .trim()
     .split(/\s*\n\s*/)
     .filter(v => v)
     .map(v => v.split(/\s+/).map(n => Number(n)));
-  /* eslint-enable no-shadow */
 
   debug('data', data);
 
