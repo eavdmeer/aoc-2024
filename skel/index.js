@@ -31,15 +31,11 @@ export default async function dayxx(target)
 
   const buffer = await fs.readFile(target);
 
-  /* eslint-disable no-shadow */
   const data = buffer
     .toString()
     .trim()
     .split(/\s*\n\s*/)
     .filter(v => v);
-  /* eslint-enable no-shadow */
-
-  debug('data', data);
 
   const part1 = solve1(data);
   const expect1a = 0;
