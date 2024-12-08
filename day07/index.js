@@ -32,6 +32,45 @@ function solve1(data)
   }).reduce((a, v) => a + v[0], 0);
 }
 
+function canMake(value, terms, methods = '*+')
+{
+  const last = terms.at(-1);
+  if (terms.length === 1)
+  {
+    return value === last;
+  }
+  if (value % last === 0)
+  {
+    if (canMake(value / last, terms.slice(0, -1), methods)) { return true; }
+  }
+  if (value > last)
+  {
+    if (canMake(value - last, terms.slice(0, -1), methods)) { return true; }
+  }
+  if (methods.includes('||') && `${value}`.endsWith(`${last}`))
+  {
+    const next = Number(`${value}`.replace(new RegExp(`${last}$`), ''));
+    if (canMake(next, terms.slice(0, -1), methods)) { return true; }
+  }
+  return false;
+}
+
+function solve1a(data)
+{
+  debug('data:', data);
+
+  return data.filter(line => canMake(line[0], line.slice(1)))
+    .reduce((a, v) => a + v[0], 0);
+}
+
+function solve2a(data)
+{
+  debug('data:', data);
+
+  return data.filter(line => canMake(line[0], line.slice(1), '*+||'))
+    .reduce((a, v) => a + v[0], 0);
+}
+
 function solve2(data)
 {
   debug('data:', data);
@@ -75,7 +114,8 @@ export default async function day07(target)
       .flat()
       .map(n => Number(n)));
 
-  const part1 = solve1(data);
+  const version = 2;
+  const part1 = version === 1 ? solve1(data) : solve1a(data);
   const expect1a = 3749;
   if (target.includes('example') && part1 !== expect1a)
   {
@@ -87,7 +127,7 @@ export default async function day07(target)
     throw new Error(`Invalid part 1 solution: ${part1}. Expecting; ${expect1b}`);
   }
 
-  const part2 = solve2(data);
+  const part2 = version === 1 ? solve2(data) : solve2a(data);
   const expect2a = 11387;
   if (target.includes('example') && part2 !== expect2a)
   {
