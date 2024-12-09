@@ -170,12 +170,12 @@ function solve2(data)
     return newpos;
   });
 
-  return moved.reduce((a, [ oinkidx, oinkid, oinksize ]) =>
+  return moved.reduce((a, [ idx, id, size ]) =>
   {
     let val = 0;
-    for (let i = oinkidx; i < oinkidx + oinksize; i++)
+    for (let i = idx; i < idx + size; i++)
     {
-      val += i * oinkid;
+      val += i * id;
     }
     return a + val;
   }, 0);
