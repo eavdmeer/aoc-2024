@@ -13,36 +13,39 @@ if (process.argv[2])
 
 function expand(data)
 {
-  return data.map((v, i) => Array(v).fill(i % 2 ? '.' : i / 2)).flat();
+  return data.map((v, i) => Array(v).fill(i % 2 ? -1 : i / 2)).flat();
 }
 
 function compact(data)
 {
   const result = Array.from(data);
 
-  while (result.includes('.'))
+  const blanks = [];
+  result.forEach((v, i) =>
   {
-    debug(result.join(''));
-    const val = result.pop();
-    if (val === '.') { continue; }
+    if (v < 0) { blanks.push(i); };
+  });
 
-    const idx = result.indexOf('.');
-    result[idx] = val;
-  }
+  blanks.forEach(i =>
+  {
+    while (result.at(-1) < 0) { result.pop(); };
+    if (result.length <= i) { return; }
+    result[i] = result.pop();
+  });
 
   return result;
 }
 
 function checksum(data)
 {
-  return data.reduce((a, v, i) => a + i * (v === '.' ? 0 : v), 0);
+  return data.reduce((a, v, i) => a + i * (v < 0 ? 0 : v), 0);
 }
 
 function solve1(data)
 {
   debug('data:', data);
-  return 6353658451014;
-  // return checksum(compact(expand(data)));
+  // return 6353658451014;
+  return checksum(compact(expand(data)));
 }
 
 function solve2a(data)
