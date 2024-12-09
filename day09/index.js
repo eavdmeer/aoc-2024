@@ -48,87 +48,8 @@ function solve1(data)
   return checksum(compact(expand(data)));
 }
 
-function solve2a(data)
-{
-  const files = {};
-  let blanks = [];
-
-  let fid = 0;
-  let pos = 0;
-
-  data.forEach((x, i) =>
-  {
-    if (i % 2 === 0)
-    {
-      if (x === 0)
-      {
-        throw new Error('unexpected x=0 for file');
-      }
-      files[fid] = [ pos, x ];
-      fid += 1;
-    }
-    else
-    {
-      if (x !== 0)
-      {
-        blanks.push([ pos, x ]);
-      }
-    }
-    pos += x;
-  });
-
-  while (fid > 0)
-  {
-    fid -= 1;
-    let size;
-    [ pos, size ] = files[fid];
-    /* eslint-disable no-loop-func */
-    blanks.some(([ start, length ], i) =>
-    {
-      if (start >= pos)
-      {
-        blanks = blanks.slice(i);
-        return true;
-      }
-      if (size <= length)
-      {
-        files[fid] = [ start, size ];
-        if (size === length)
-        {
-          blanks.splice(i, 1);
-        }
-        else
-        {
-          blanks[i] = [ start + size, length - size ];
-        }
-        return true;
-      }
-      return false;
-    });
-  }
-
-  let total = 0;
-
-  Object.entries(files).forEach(v =>
-  {
-    const [ id, [ fpos, size ] ] = v;
-    for (let x = fpos; x < fpos + size; x++)
-    {
-      total += id * x;
-    }
-  });
-
-  return total;
-}
-
 function solve2(data)
 {
-  const method = 0;
-  if (method === 1)
-  {
-    return solve2a(data);
-  }
-
   debug('data:', data);
 
   const files = [];
@@ -137,35 +58,30 @@ function solve2(data)
   let offset = 0;
   data.forEach((v, i) =>
   {
-    if (i % 2)
+    if (i % 2 === 0)
+    {
+      files.push([ i / 2, offset, v ]);
+      if (v === 0) { throw new Error('EMPTY'); }
+    }
+    else if (v > 0)
     {
       // Add to space
       blanks.push([ offset, v ]);
     }
-    else
-    {
-      files.push([ offset, i / 2, v ]);
-      if (v === 0) { console.log('EMPTY'); }
-    }
     offset += v;
   });
 
-  if (files.length + blanks.length !== data.length)
-  {
-    throw new Error('BAD LENGTH');
-  }
-
   files.reverse();
 
-  const moved = files.map(([ idx, id, size ]) =>
+  const moved = files.map(([ id, idx, size ]) =>
   {
-    const slot = blanks.find(([ , free ]) => free >= size);
+    const slot = blanks.find(([ pos, free ]) => pos < idx && free >= size);
     if (! slot)
     {
-      return [ idx, id, size ];
+      return [ id, idx, size ];
     }
 
-    const newpos = [ slot[0], id, size ];
+    const newpos = [ id, slot[0], size ];
 
     slot[0] += size;
     slot[1] -= size;
@@ -173,7 +89,7 @@ function solve2(data)
     return newpos;
   });
 
-  return moved.reduce((a, [ idx, id, size ]) =>
+  return moved.reduce((a, [ id, idx, size ]) =>
   {
     let val = 0;
     for (let i = idx; i < idx + size; i++)
