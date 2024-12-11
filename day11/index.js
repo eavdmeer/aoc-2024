@@ -30,7 +30,6 @@ function solve(data, n)
 {
   debug('data:', data);
 
-  let max = 0;
   const map = new Map();
   data.forEach(stone => map.set(stone, (map.get(stone) ?? 0) + 1));
 
@@ -43,10 +42,8 @@ function solve(data, n)
       const nstones = step(stone);
       nstones.forEach(nstone => map.set(nstone, (map.get(nstone) ?? 0) + cnt));
     });
-    if (map.size > max) { max = map.size; }
   }
 
-  console.log('max map size for n =', n, 'is:', max);
   return [ ...map.values() ].reduce((a, v) => a + v, 0);
 }
 
