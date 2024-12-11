@@ -5,12 +5,14 @@ import * as fs from 'fs/promises';
 async function run()
 {
   const buffer = await fs.readFile('times.txt');
-  const [ start, t1, t2 ] = buffer.toString()
+  const times = buffer.toString()
     .split('\n')
     .filter(v => /^\d+$/.test(v))
     .map(v => 1000 * Number(v));
-  console.log('Part 1:', humanizeDuration(t1 - start));
-  console.log('Part 2:', humanizeDuration(t2 - t1));
+  for (let i = 1; i < times.length; i++)
+  {
+    console.log('Time', i, ':', humanizeDuration(times[i] - times[i - 1]));
+  }
 }
 
 run()
