@@ -13,22 +13,24 @@ if (process.argv[2])
 
 function step(v)
 {
-  if (v === '0')
+  if (v === 0)
   {
-    return [ '1' ];
+    return [ 1 ];
   }
-  if (v.length % 2 === 0)
+  const vs = String(v);
+  if (vs.length % 2 === 0)
   {
-    const l = v.length / 2;
-    return [ v.substr(0, l), v.substr(l, l).replace(/^0+(0|[0-9]+)/, '$1') ];
+    const l = vs.length / 2;
+    return [ Number(vs.substr(0, l)), Number(vs.substr(l, l)) ];
   }
-  return [ `${2024 * v}` ];
+  return [ 2024 * v ];
 }
 
 function solve(data, n)
 {
   debug('data:', data);
 
+  let max = 0;
   const map = new Map();
   data.forEach(stone => map.set(stone, (map.get(stone) ?? 0) + 1));
 
@@ -41,8 +43,10 @@ function solve(data, n)
       const nstones = step(stone);
       nstones.forEach(nstone => map.set(nstone, (map.get(nstone) ?? 0) + cnt));
     });
+    if (map.size > max) { max = map.size; }
   }
 
+  console.log('max map size for n =', n, 'is:', max);
   return [ ...map.values() ].reduce((a, v) => a + v, 0);
 }
 
@@ -66,7 +70,8 @@ export default async function day11(target)
   const data = buffer
     .toString()
     .trim()
-    .split(/ /);
+    .split(/ /)
+    .map(Number);
 
   const part1 = solve1(data);
   const expect1a = 55312;
