@@ -93,7 +93,7 @@ export default async function day05(target)
   {
     throw new Error(`Invalid part 2 solution: ${part2}. Expecting; ${expect2a}`);
   }
-  const expect2b = 0;
+  const expect2b = 6085;
   if (target === 'data.txt' && part2 !== expect2b)
   {
     throw new Error(`Invalid part 2 solution: ${part2}. Expecting; ${expect2b}`);
