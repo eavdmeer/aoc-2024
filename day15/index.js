@@ -11,23 +11,6 @@ if (process.argv[2])
     .then(console.log);
 }
 
-function next(robot, step)
-{
-  switch (step)
-  {
-    case '^':
-      return { r: robot.r - 1, c: robot.c };
-    case '>':
-      return { r: robot.r, c: robot.c + 1 };
-    case 'v':
-      return { r: robot.r + 1, c: robot.c };
-    case '<':
-      return { r: robot.r, c: robot.c - 1 };
-    default:
-      throw new Error(`unsupported step: ${step}!`);
-  }
-}
-
 function score(grid)
 {
   let total = 0;
@@ -43,40 +26,7 @@ function score(grid)
   return total;
 }
 
-const charAt = (g, n) => g[n.r]?.at(n.c);
 const show = g => debug(g.map(v => v.join('')).join('\n'));
-
-function runstep(grid, robot, step, i)
-{
-  if (step === '\n') { return; }
-  debug('step', i + 1, step);
-  const nxt = next(robot, step);
-
-  let tgt = nxt;
-  const move = [];
-  while (charAt(grid, tgt) !== '.' && charAt(grid, tgt) !== '#')
-  {
-    move.push({ ...tgt });
-    tgt = next(tgt, step);
-  }
-  if (charAt(grid, tgt) === '#')
-  {
-    return;
-  }
-
-  // Move the boxes
-  move.forEach(pos =>
-  {
-    const nxtnxt = next(pos, step);
-    grid[nxtnxt.r][nxtnxt.c] = 'O';
-  });
-
-  // Move the robot
-  grid[robot.r][robot.c] = '.';
-  grid[nxt.r][nxt.c] = '@';
-  robot.r = nxt.r;
-  robot.c = nxt.c;
-}
 
 function solve1(data)
 {
@@ -84,13 +34,41 @@ function solve1(data)
 
   // Create copies of the things we will modify
   const grid = [ ...data.grid ];
-  const robot = { r: data.robot[0], c: data.robot[1] };
+  let [ r, c ] = data.robot;
 
   show(grid);
 
   data.steps.forEach((step, i) =>
   {
-    runstep(grid, robot, step, i);
+    if (step === '\n') { return; }
+
+    /* eslint-disable quote-props */
+    const dr = { '^': -1, 'v': 1 }[step] ?? 0;
+    const dc = { '<': -1, '>': 1 }[step] ?? 0;
+    /* eslint-enable quote-props */
+
+    debug('step', i + 1, dr, dc);
+
+    let nr = r + dr;
+    let nc = c + dc;
+    const move = [];
+    while (grid[nr][nc] !== '.' && grid[nr][nc] !== '#')
+    {
+      move.push([ nr, nc ]);
+      nr += dr;
+      nc += dc;
+    }
+    if (grid[nr][nc] === '#') { return; }
+
+    // Move the boxes
+    move.slice(-1).forEach(([ cr, cc ]) => grid[cr + dr][cc + dc] = 'O');
+
+    // Move the robot
+    grid[r][c] = '.';
+    r += dr;
+    c += dc;
+    grid[r][c] = '@';
+
     show(grid);
   });
 
