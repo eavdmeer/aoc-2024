@@ -17,7 +17,7 @@ function score(grid)
 
   grid.forEach((row, r) => row.forEach((ch, c) =>
   {
-    if (ch === 'O')
+    if (ch === 'O' || ch === '[')
     {
       total += 100 * r + c;
     }
@@ -26,19 +26,15 @@ function score(grid)
   return total;
 }
 
-const show = g => debug(g.map(v => v.join('')).join('\n'));
-
 function solve1(data)
 {
   debug('data:', data);
 
   // Create copies of the things we will modify
-  const grid = [ ...data.grid ];
+  const grid = JSON.parse(JSON.stringify(data.grid));
   let [ r, c ] = data.robot;
 
-  show(grid);
-
-  data.steps.forEach((step, i) =>
+  data.steps.forEach(step =>
   {
     if (step === '\n') { return; }
 
@@ -46,8 +42,6 @@ function solve1(data)
     const dr = { '^': -1, 'v': 1 }[step] ?? 0;
     const dc = { '<': -1, '>': 1 }[step] ?? 0;
     /* eslint-enable quote-props */
-
-    debug('step', i + 1, dr, dc);
 
     let nr = r + dr;
     let nc = c + dc;
@@ -60,7 +54,7 @@ function solve1(data)
     }
     if (grid[nr][nc] === '#') { return; }
 
-    // Move the boxes
+    // Move the boxes (effectively only the last one)
     move.slice(-1).forEach(([ cr, cc ]) => grid[cr + dr][cc + dc] = 'O');
 
     // Move the robot
@@ -68,8 +62,6 @@ function solve1(data)
     r += dr;
     c += dc;
     grid[r][c] = '@';
-
-    show(grid);
   });
 
   return score(grid);
@@ -77,8 +69,68 @@ function solve1(data)
 
 function solve2(data)
 {
-  // debug('data:', data);
-  return 0;
+  debug('data:', data);
+
+  // Create the stretched-out grid
+  const grid = data.grid
+    .map(row => row.map(v =>
+      v === '@' ? [ '@', '.' ] :
+        v === 'O' ? [ '[', ']' ] :
+          [ v, v ]).flat());
+
+  // Correct robot position
+  let [ r, c ] = data.robot;
+  c *= 2;
+
+  data.steps.forEach(step =>
+  {
+    if (step === '\n') { return; }
+
+    /* eslint-disable quote-props */
+    const dr = { '^': -1, 'v': 1 }[step] ?? 0;
+    const dc = { '<': -1, '>': 1 }[step] ?? 0;
+    /* eslint-enable quote-props */
+
+    const seen = new Set();
+    const move = [];
+    const queue = [ [ r + dr, c + dc ] ];
+    while (queue.length)
+    {
+      const [ nr, nc ] = queue.shift();
+
+      if (seen.has(`${nr},${nc}`)) { continue; }
+
+      debug('look at:', 1 + nr, 1 + nc, queue.length);
+      seen.add(`${nr},${nc}`);
+
+      if (grid[nr][nc] === '.') { continue; }
+      if (grid[nr][nc] === '#') { return; }
+
+      move.push([ nr, nc, grid[nr][nc] ]);
+      queue.push([ nr + dr, nc + dc ]);
+
+      if (dr !== 0)
+      {
+        queue.push(grid[nr][nc] === '[' ? [ nr, nc + 1 ] : [ nr, nc - 1 ]);
+      }
+    }
+
+    // Move the boxes in reverse order
+    move.reverse();
+    move.forEach(([ cr, cc, ch ]) =>
+    {
+      grid[cr][cc] = '.';
+      grid[cr + dr][cc + dc] = ch;
+    });
+
+    // Move the robot
+    grid[r][c] = '.';
+    r += dr;
+    c += dc;
+    grid[r][c] = '@';
+  });
+
+  return score(grid);
 }
 
 export default async function day15(target)
@@ -125,12 +177,12 @@ export default async function day15(target)
   }
 
   const part2 = solve2(data);
-  const expect2a = 0;
+  const expect2a = 9021;
   if (target.includes('example') && part2 !== expect2a)
   {
     throw new Error(`Invalid part 2 solution: ${part2}. Expecting; ${expect2a}`);
   }
-  const expect2b = 0;
+  const expect2b = 1521453;
   if (target === 'data.txt' && part2 !== expect2b)
   {
     throw new Error(`Invalid part 2 solution: ${part2}. Expecting; ${expect2b}`);
