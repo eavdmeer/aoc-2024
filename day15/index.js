@@ -99,25 +99,19 @@ function solve2(data)
       const [ nr, nc ] = queue.shift();
 
       if (seen.has(`${nr},${nc}`)) { continue; }
-
-      debug('look at:', 1 + nr, 1 + nc, queue.length);
       seen.add(`${nr},${nc}`);
 
       if (grid[nr][nc] === '.') { continue; }
       if (grid[nr][nc] === '#') { return; }
 
       move.push([ nr, nc, grid[nr][nc] ]);
-      queue.push([ nr + dr, nc + dc ]);
 
-      if (dr !== 0)
-      {
-        queue.push(grid[nr][nc] === '[' ? [ nr, nc + 1 ] : [ nr, nc - 1 ]);
-      }
+      queue.push([ nr + dr, nc + dc ]);
+      queue.push(grid[nr][nc] === '[' ? [ nr, nc + 1 ] : [ nr, nc - 1 ]);
     }
 
     // Move the boxes in reverse order
-    move.reverse();
-    move.forEach(([ cr, cc, ch ]) =>
+    move.toReversed().forEach(([ cr, cc, ch ]) =>
     {
       grid[cr][cc] = '.';
       grid[cr + dr][cc + dc] = ch;
