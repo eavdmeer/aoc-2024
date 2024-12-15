@@ -106,8 +106,8 @@ function solve2(data)
 
       move.push([ nr, nc, grid[nr][nc] ]);
 
-      queue.push([ nr + dr, nc + dc ]);
       queue.push(grid[nr][nc] === '[' ? [ nr, nc + 1 ] : [ nr, nc - 1 ]);
+      queue.push([ nr + dr, nc + dc ]);
     }
 
     // Move the boxes in reverse order
