@@ -83,8 +83,9 @@ function solve2(data)
       if (cost === best)
       {
         path.forEach(([ pr, pc ]) => bestSquares.add(`${pr},${pc}`));
+        continue;
       }
-      continue;
+      break;
     }
 
     const next = [
