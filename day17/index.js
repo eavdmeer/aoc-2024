@@ -75,10 +75,6 @@ function run(av, bv, cv, program)
       default:
         throw new Error(`Invalid opcode: ${opcode}!`);
     }
-
-    if (a < 0n) { throw new Error('negative A!'); }
-    if (b < 0n) { throw new Error('negative B!'); }
-    if (c < 0n) { throw new Error('negative C!'); }
   }
 
   return output.join(',');
