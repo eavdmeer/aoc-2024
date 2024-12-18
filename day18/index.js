@@ -54,32 +54,6 @@ function solve1(data, drops, rows, cols)
   return findPath(grid, rows, cols);
 }
 
-function binarySearch(arr, val)
-{
-  let start = 0;
-  let end = arr.length - 1;
-
-  while (start <= end)
-  {
-    const mid = Math.floor((start + end) / 2);
-
-    if (arr[mid] === val)
-    {
-      return mid;
-    }
-
-    if (val < arr[mid])
-    {
-      end = mid - 1;
-    }
-    else
-    {
-      start = mid + 1;
-    }
-  }
-  return -1;
-}
-
 function solve2(data, rows, cols)
 {
   debug('data:', data);
@@ -91,12 +65,7 @@ function solve2(data, rows, cols)
 
   while (start <= end)
   {
-    if (end - start <= 3)
-    {
-      mid++;
-      break;
-    }
-    mid = Math.floor((start + end) / 2);
+    mid = end - start <= 3 ? start : Math.floor((start + end) / 2);
 
     const grid = Array(rows);
     for (let i = 0; i < rows; i++) { grid[i] = Array(cols).fill('.'); }
@@ -105,11 +74,12 @@ function solve2(data, rows, cols)
 
     if (val < 0)
     {
-      end = mid + 1;
+      end = mid;
+      if (end - start <= 3) { break; }
     }
     else
     {
-      start = mid - 1;
+      start = end - start <= 3 ? mid + 1 : mid - 1;
     }
   }
 
@@ -145,7 +115,7 @@ export default async function day18(target)
   }
 
   const part2 = solve2(data, w, w);
-  const expect2a = '0,5';
+  const expect2a = '6,1';
   if (target.includes('example') && part2 !== expect2a)
   {
     throw new Error(`Invalid part 2 solution: ${part2}. Expecting; ${expect2a}`);
