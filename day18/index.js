@@ -46,8 +46,8 @@ function solve1(data, drops, rows, cols)
 {
   debug('data:', data);
 
-  const grid = Array(rows);
-  for (let i = 0; i < rows; i++) { grid[i] = Array(cols).fill('.'); }
+  const grid = Array.from({ length: rows }).map(() =>
+    Array.from({ length: cols }).fill('.'));
 
   data.slice(0, drops).forEach(([ c, r ]) => grid[r][c] = '#');
 
@@ -67,8 +67,8 @@ function solve2(data, rows, cols)
   {
     mid = end - start <= 3 ? start : Math.floor((start + end) / 2);
 
-    const grid = Array(rows);
-    for (let i = 0; i < rows; i++) { grid[i] = Array(cols).fill('.'); }
+    const grid = Array.from({ length: rows }).map(() =>
+      Array.from({ length: cols }).fill('.'));
     data.slice(0, mid).forEach(([ c, r ]) => grid[r][c] = '#');
     const val = findPath(grid, rows, cols);
 
