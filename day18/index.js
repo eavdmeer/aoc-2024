@@ -70,7 +70,6 @@ function solve2(data, rows, cols)
       Array.from({ length: cols }).fill('.'));
     data.slice(0, mi + 1).forEach(([ c, r ]) => grid[r][c] = '#');
     const connected = findPath(grid, rows, cols) > 0;
-    console.log(lo, hi, mi, connected);
 
     if (connected)
     {
