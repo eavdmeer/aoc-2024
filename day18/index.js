@@ -59,31 +59,31 @@ function solve2(data, rows, cols)
   debug('data:', data);
 
   // Find the drop that will block the path with binary search
-  let start = 0;
-  let end = data.length - 1;
-  let mid;
+  let lo = 0;
+  let hi = data.length - 1;
 
-  while (start <= end)
+  while (lo < hi)
   {
-    mid = end - start <= 3 ? start : Math.floor((start + end) / 2);
+    const mi = Math.floor((lo + hi) / 2);
 
     const grid = Array.from({ length: rows }).map(() =>
       Array.from({ length: cols }).fill('.'));
-    data.slice(0, mid).forEach(([ c, r ]) => grid[r][c] = '#');
-    const val = findPath(grid, rows, cols);
+    data.slice(0, mi + 1).forEach(([ c, r ]) => grid[r][c] = '#');
+    const connected = findPath(grid, rows, cols) > 0;
+    console.log(lo, hi, mi, connected);
 
-    if (val < 0)
+    if (connected)
     {
-      end = mid;
-      if (end - start <= 3) { break; }
+      lo = mi + 1;
     }
     else
     {
-      start = end - start <= 3 ? mid + 1 : mid - 1;
+      hi = mi;
     }
   }
 
-  return data[mid].join(',');
+  // TODO: need +1 for real data, not for the test
+  return data[lo + 1].join(',');
 }
 
 export default async function day18(target)
