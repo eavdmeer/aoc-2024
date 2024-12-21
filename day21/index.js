@@ -145,7 +145,7 @@ function solve1(data)
       const best = Math.min(...moves.map(seq =>
         pairs('A', seq).reduce((a, p) => a + length(p, 2), 0)));
 
-      return total + Number(code.replace(/[^0-9]/g, '')) * best;
+      return total + Number(code.slice(0, -1)) * best;
     }
 
     for (let i = 0; i < 2; i++)
@@ -160,7 +160,7 @@ function solve1(data)
       }
     }
 
-    return total + Number(code.replace(/[^0-9]/g, '')) * moves[0].length;
+    return total + Number(code.slice(0, -1)) * moves[0].length;
   }, 0);
 }
 
@@ -171,15 +171,11 @@ function solve2(data)
   return data.reduce((total, code) =>
   {
     const moves = solve(code, numKeyMoves);
-    let best = Infinity;
 
-    moves.forEach(seq =>
-    {
-      const len = pairs('A', seq).reduce((a, p) => a + length(p, 25), 0);
-      best = Math.min(best, len);
-    });
+    const best = Math.min(...moves.map(seq =>
+      pairs('A', seq).reduce((a, p) => a + length(p, 25), 0)));
 
-    return total + Number(code.replace(/[^0-9]/g, '')) * best;
+    return total + Number(code.slice(0, -1)) * best;
   }, 0);
 }
 
