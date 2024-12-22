@@ -42,7 +42,7 @@ function solve2(data)
   }
   debug('data:', data);
 
-  const key = a => a.join(',');
+  const key = l => l.map(v => v + 9).reduce((a, v, i) => a | v << 5 * i, 0);
 
   const first = data.map(num =>
   {
