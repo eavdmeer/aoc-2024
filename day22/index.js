@@ -44,12 +44,15 @@ function solve2(data)
 
   const key = l => l.map(v => v + 9).reduce((a, v, i) => a | v << 5 * i, 0);
 
-  const first = data.map(num =>
+  const prices = new Map();
+  let bestPrice = 0;
+
+  data.forEach(num =>
   {
+    const seen = new Set();
     let val = num;
     const last4 = [];
     let lastVal;
-    const bestPrice = new Map();
 
     for (let i = 0; i < 2000; i++)
     {
@@ -63,11 +66,19 @@ function solve2(data)
 
       last4.shift();
       const k = key(last4);
-      if (! bestPrice.has(k)) { bestPrice.set(k, lastVal); }
+      if (! seen.has(k))
+      {
+        seen.add(k);
+        const newPrice = prices.has(k) ? prices.get(k) + lastVal : lastVal;
+        bestPrice = Math.max(bestPrice, newPrice);
+        prices.set(k, newPrice);
+      }
     }
-
-    return bestPrice;
   });
+
+  return bestPrice;
+
+  return Math.max(...prices.values())
 
   const allKeys = new Set();
   first.forEach(f => f.keys().forEach(k => allKeys.add(k)));
