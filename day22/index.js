@@ -42,8 +42,6 @@ function solve2(data)
   }
   debug('data:', data);
 
-  const key = l => l.map(v => v + 9).reduce((a, v, i) => a | v << 5 * i, 0);
-
   const prices = new Map();
   let bestPrice = 0;
 
@@ -51,21 +49,20 @@ function solve2(data)
   {
     const seen = new Set();
     let val = num;
-    const last4 = [];
     let lastVal;
+    let k = 0;
 
     for (let i = 0; i < 2000; i++)
     {
       val = next(val);
 
-      // Keep last four differences
-      if (lastVal !== undefined) { last4.push(val % 10 - lastVal); }
+      // Keep last four differences in 20 bits number
+      k = (k << 5 | val % 10 - lastVal + 9) & 1048575;
+
       lastVal = val % 10;
 
-      if (last4.length <= 4) { continue; }
+      if (i <= 4) { continue; }
 
-      last4.shift();
-      const k = key(last4);
       if (! seen.has(k))
       {
         seen.add(k);
@@ -77,17 +74,6 @@ function solve2(data)
   });
 
   return bestPrice;
-
-  return Math.max(...prices.values())
-
-  const allKeys = new Set();
-  first.forEach(f => f.keys().forEach(k => allKeys.add(k)));
-
-  return [ ...allKeys ].reduce((v, k) =>
-  {
-    const n = first.reduce((a, f) => a + (f.get(k) ?? 0), 0);
-    return n > v ? n : v;
-  }, 0);
 }
 
 export default async function day22(target)
