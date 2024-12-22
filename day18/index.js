@@ -15,7 +15,7 @@ if (process.argv[2])
 function findPath(grid, rows, cols)
 {
   const seen = new Set();
-  const key = (r, c) => `${r},${c}`;
+  const key = (kr, kc) => kr << 8 | kc;
 
   const queue = new MinPriorityQueue(v => v[0]);
   queue.push([ 0, 0, 0 ]);

@@ -12,7 +12,7 @@ if (process.argv[2])
     .then(console.log);
 }
 
-const key = (r, c, dr, dc) => `${r},${c}:${dr},${dc}`;
+const key = (r, c, dr, dc) => r << 20 | c << 12 | dr + 1 << 4 | dc + 1;
 
 /*
 function printResult(result)
@@ -32,7 +32,8 @@ function solve1(data)
 
   queue.push({ cost: 0, r: sr, c: sc, dr: 0, dc: 1 });
 
-  const seen = new Set(key(0, sr, sc, 0, 1));
+  const seen = new Set();
+  seen.add(key(sr, sc, 0, 1));
 
   while (queue.size())
   {
@@ -66,7 +67,8 @@ function solve2(data)
 
   queue.push({ cost: 0, r: sr, c: sc, dr: 0, dc: 1, path: [] });
 
-  const seen = new Set(key(0, sr, sc, 0, 1));
+  const seen = new Set();
+  seen.add(key(sr, sc, 0, 1));
   let best = -1;
   const bestSquares = new Set();
 

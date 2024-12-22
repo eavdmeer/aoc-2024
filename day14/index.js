@@ -56,9 +56,6 @@ function solve2(data, w, h)
       w, h);
     if (d < minimum.value)
     {
-      process.stdout.clearLine(0);
-      process.stdout.cursorTo(0);
-      process.stdout.write(`danger minimum: ${d} at ${t}`);
       minimum.value = d;
       minimum.time = t;
     }
