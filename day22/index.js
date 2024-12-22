@@ -44,7 +44,7 @@ function solve2(data)
 
   const key = a => a.join(',');
 
-  const best = data.map(num =>
+  const first = data.map(num =>
   {
     let val = num;
     const last4 = [];
@@ -73,11 +73,11 @@ function solve2(data)
   });
 
   const allKeys = new Set();
-  best.forEach(b => b.keys().forEach(k => allKeys.add(k)));
+  first.forEach(f => f.keys().forEach(k => allKeys.add(k)));
 
   return [ ...allKeys ].reduce((v, k) =>
   {
-    const n = best.reduce((a, b) => a + (b.get(k) ?? 0), 0);
+    const n = first.reduce((a, f) => a + (f.get(k) ?? 0), 0);
     return n > v ? n : v;
   }, 0);
 }
