@@ -11,7 +11,7 @@ if (process.argv[2])
     .then(console.log);
 }
 
-const key = (kr, kc) => `${kr},${kc}`;
+const key = (kr, kc) => kr << 8 | kc;
 
 function getpath(grid, start, end)
 {
@@ -44,7 +44,7 @@ function solve(grid, start, end, saving, maxHops)
 {
   const seen = getpath(grid, start, end);
   const entries = [ ...seen.entries() ]
-    .map(([ a, b ]) => [ a.split(',').map(Number), b ]);
+    .map(([ a, b ]) => [ [ a >> 8, a & 255 ], b ]);
 
   return entries.reduce((a, [ [ r, c ], d ]) => a + entries
     .filter(([ [ nr, nc ], nd ]) =>
