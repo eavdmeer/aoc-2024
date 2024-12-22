@@ -57,16 +57,13 @@ function solve2(data)
 
       // Keep last four differences
       if (lastVal !== undefined) { last4.push(val % 10 - lastVal); }
-      if (last4.length > 4) { last4.shift(); }
       lastVal = val % 10;
 
-      if (last4.length < 4) { continue; }
+      if (last4.length <= 4) { continue; }
 
+      last4.shift();
       const k = key(last4);
-      if (! bestPrice.has(k))
-      {
-        bestPrice.set(k, lastVal);
-      }
+      if (! bestPrice.has(k)) { bestPrice.set(k, lastVal); }
     }
 
     return bestPrice;
