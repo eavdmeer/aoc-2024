@@ -8,18 +8,20 @@ const debug = makeDebug('day06');
 if (process.argv[2])
 {
   day06(process.argv[2])
-    .then(console.log)
-    .catch(err => console.log(err.message));
+    .then(console.log);
 }
 
+/*
 function printResult(result)
 {
   process.stdout.clearLine(0);
   process.stdout.cursorTo(0);
   process.stdout.write(`${result}`);
 }
+*/
 
-const key = (r, c, dir) => `${r},${c}:${dir}`;
+const dirCode = { '^': 0, '>': 1, v: 3, '<': 4 };
+const key = (r, c, dir) => r << 12 | c << 4 | dirCode[dir];
 
 function checkPath(data, start)
 {
@@ -75,7 +77,7 @@ function checkPath(data, start)
   }
 
   const pos = new Set();
-  seen.forEach(v => pos.add(v.replace(/:./, '')));
+  seen.forEach(v => pos.add(v >> 4));
 
   return pos;
 }
@@ -123,7 +125,7 @@ function solve2(data)
 
   visited.forEach(v =>
   {
-    const [ r, c ] = v.split(',');
+    const [ r, c ] = [ v >> 8, v & 255 ];
     if (data[r][c] !== '.') { return; }
 
     data[r][c] = '#';
@@ -137,14 +139,14 @@ function solve2(data)
       if (/already visited/.test(err.message))
       {
         loops++;
-        printResult(loops);
+        // printResult(loops);
       }
     }
 
     data[r][c] = '.';
   });
 
-  printResult('');
+  // printResult('');
 
   return loops;
 }
