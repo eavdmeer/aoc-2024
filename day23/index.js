@@ -53,10 +53,10 @@ function solve1(data)
     .map(v => v.join(','))).size;
 }
 
-function dfs(node, path, conn, groups)
+function dfs(node, path, connections, groups)
 {
-  const con = conn.get(node);
-  if (! path.every(n => con.includes(n))) { return; }
+  const neighbors = connections.get(node);
+  if (! path.every(n => neighbors.includes(n))) { return; }
 
   const npath = [ ...path, node ];
   const k = npath.toSorted().join(',');
@@ -64,9 +64,9 @@ function dfs(node, path, conn, groups)
   if (groups.has(k)) { return; }
   groups.add(k);
 
-  con
+  neighbors
     .filter(n => ! npath.includes(n))
-    .forEach(n => dfs(n, npath, conn, groups));
+    .forEach(n => dfs(n, npath, connections, groups));
 }
 
 function solve2(data)
