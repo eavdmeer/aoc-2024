@@ -102,12 +102,12 @@ function solve2(data)
 
   let bestPath = [];
   const checked = new Set();
-  [ ...connections.entries() ].forEach(([ n, peers ]) =>
+  [ ...connections.entries() ].forEach(([ node, peers ]) =>
   {
-    if (checked.has(n)) { return; }
-    const p = dfs(n, [], peers, connections);
-    p.forEach(v => checked.add(v));
-    if (p.length > bestPath.length) { bestPath = p; }
+    if (checked.has(node)) { return; }
+    const path = dfs(node, [], peers, connections);
+    path.forEach(n => checked.add(n));
+    if (path.length > bestPath.length) { bestPath = path; }
   });
 
   return bestPath.join(',');
