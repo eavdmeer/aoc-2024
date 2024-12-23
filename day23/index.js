@@ -100,11 +100,14 @@ function solve2(data)
     connections.get(b).push(a);
   });
 
-  let bestPath;
+  let bestPath = [];
+  const checked = new Set();
   [ ...connections.entries() ].forEach(([ n, peers ]) =>
   {
+    if (checked.has(n)) { return; }
     const p = dfs(n, [], peers, connections);
-    if (! bestPath || p.length > bestPath.length) { bestPath = p; }
+    p.forEach(v => checked.add(v));
+    if (p.length > bestPath.length) { bestPath = p; }
   });
 
   return bestPath.join(',');
