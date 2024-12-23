@@ -53,37 +53,20 @@ function solve1(data)
     .map(v => v.join(','))).size;
 }
 
-const cache = new Map();
-const key = (n, a) => `${n},${a.sort().join(',')}`;
-
-function dfs(node, path, peers, connections)
+function dfs(node, path, conn, groups)
 {
-  const k = key(node, path);
-  if (cache.has(k))
-  {
-    return cache.get(k);
-  }
+  const con = conn.get(node);
+  if (! path.every(n => con.includes(n))) { return; }
 
-  const con = connections.get(node);
-  if (! path.every(n => con.includes(n)))
-  {
-    cache.set(k, path);
-    return path;
-  }
+  const npath = [ ...path, node ];
+  const k = npath.toSorted().join(',');
 
-  const todo = peers.filter(v => ! [ ...path, node ].includes(v));
-  if (todo.length === 0) { return path; }
+  if (groups.has(k)) { return; }
+  groups.add(k);
 
-  let bestPath;
-  todo.forEach(n =>
-  {
-    const p = dfs(n, [ ...path, node ], peers, connections);
-    if (! bestPath || p.length > bestPath.length) { bestPath = p; }
-  });
-
-  cache.set(k, bestPath);
-
-  return bestPath;
+  con
+    .filter(n => ! npath.includes(n))
+    .forEach(n => dfs(n, npath, conn, groups));
 }
 
 function solve2(data)
@@ -100,17 +83,15 @@ function solve2(data)
     connections.get(b).push(a);
   });
 
-  let bestPath = [];
-  const checked = new Set();
-  [ ...connections.entries() ].forEach(([ node, peers ]) =>
-  {
-    if (checked.has(node)) { return; }
-    const path = dfs(node, [], peers, connections);
-    path.forEach(n => checked.add(n));
-    if (path.length > bestPath.length) { bestPath = path; }
-  });
+  const groups = new Set();
+  [ ...connections.keys() ].forEach(n => dfs(n, [], connections, groups));
 
-  return bestPath.join(',');
+  return [ ...groups ]
+    .sort((a, b) => b.length - a.length)
+    .at(0)
+    .split(',')
+    .sort()
+    .join(',');
 }
 
 export default async function day23(target)
