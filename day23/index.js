@@ -2,6 +2,7 @@
 
 import * as fs from 'fs/promises';
 import makeDebug from 'debug';
+import BronKerbosch from '@seregpie/bron-kerbosch';
 
 const debug = makeDebug('day23');
 
@@ -72,6 +73,17 @@ function dfs(node, path, connections, groups)
 function solve2(data)
 {
   debug('data:', data);
+
+  const method = 'bron-kerbosch';
+
+  if (method === 'bron-kerbosch')
+  {
+    /* eslint-disable-next-line new-cap */
+    const cliques = BronKerbosch(data);
+    cliques.sort((a, b) => b.length - a.length);
+
+    return cliques[0].sort().join(',');
+  }
 
   const connections = new Map();
 
